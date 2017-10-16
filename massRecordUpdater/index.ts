@@ -1,0 +1,7 @@
+export * from './GRPCClient.interface'
+export * from './JSONObjectMessage.interface'
+export * from './MassRecordsUpdater'
+export * from './QueryRequestMessage.interface'
+export * from './RecordsRequestMessage.interface'
+export * from './SFQueryResponse.interface'
+export * from './UpdateHandler.interface'

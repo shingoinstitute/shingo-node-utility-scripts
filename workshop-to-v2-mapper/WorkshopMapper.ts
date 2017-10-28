@@ -19,9 +19,9 @@ export class WorkshopMapper {
     public async mapDemWorkshops() {
         let contacts = await this.queryFacilitators();
         let workshops = (await this.queryWorkshops()) as IWorkshop[];
-        let users = await this.auth.getUsersAsync(`user.services like '%affiliate-portal%`);
+        let users = await this.auth.readUserAsync(`user.services like '%affiliate-portal%`);
         this.userMap = keyBy(users, 'extId');
-        let roles = await this.auth.getRolesAsync(`role.service='affiliate-portal'`);
+        let roles = await this.auth.readRoleAsync(`role.service='affiliate-portal'`);
         let afMan = roles.filter(role => role.name === 'Affiliate Manager')[0];
         let cms = roles.filter(role => role.name !== 'Affiliate Manager');
         let progressBar = new ProgressBar(' Processing [:bar] :percent', {

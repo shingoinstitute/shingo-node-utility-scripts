@@ -21,14 +21,12 @@ export class WorkshopMapper {
         console.log(`got ${contacts.length} contacts`);
         let workshops = (await this.queryWorkshops()) as IWorkshop[];
         console.log(`got ${workshops.length} workshops`);
-        let users = await this.auth.readUserAsync(`user.services like '%affiliate-portal%`);
-        console.log(`got ${users.length} users`);
+        let users = (await this.auth.readUserAsync({clause: `user.services like '%affiliate-portal%'`})).users;
         this.userMap = keyBy(users, 'extId');
-        let roles = await this.auth.readRoleAsync(`role.service='affiliate-portal'`);
-
-        console.log(`got ${roles.length} roles`);
+        let roles = (await this.auth.readRoleAsync({clause: `role.service='affiliate-portal'`})).roles;
         let afMan = roles.filter(role => role.name === 'Affiliate Manager')[0];
         let cms = roles.filter(role => role.name !== 'Affiliate Manager');
+	console.log('cms:', cms);
         let progressBar = new ProgressBar(' Processing [:bar] :percent', {
             complete: '=',
             incomplete: ' ',
@@ -40,7 +38,7 @@ export class WorkshopMapper {
             progressBar.tick(1);
             const permission = { resource: `/workshops/${workshop.Id}`, level: 2 } as IPermission;
             await this.auth.createPermissionAsync(permission);
-            await this.addFacPermissions(workshop, permission);
+            if(workshop.Instructors__r) await this.addFacPermissions(workshop, permission);
             await this.auth.grantPermissionToRoleAsync(permission.resource, 2, afMan.id);
             let cm = cms.filter(role => role.name.includes(workshop.Organizing_Affiliate__c))[0];
             await this.auth.grantPermissionToRoleAsync(permission.resource, 2, cm.id);

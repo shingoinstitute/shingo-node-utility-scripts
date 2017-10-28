@@ -1,1 +1,1 @@
-export interface IWorkshop { Id: string, Organizing_Affiliate__c: string, Instructors__r: { records: any[] } }
+export interface IWorkshop { Id: string, Organizing_Affiliate__c: string, Instructors__r: any[] }

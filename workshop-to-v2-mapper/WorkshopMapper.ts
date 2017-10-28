@@ -42,8 +42,8 @@ export class WorkshopMapper {
     }
 
     private async addFacPermissions(workshop: IWorkshop, permission: IPermission) {
-        for (let contact of workshop.Instructors__r.records) {
-            let user = this.userMap[contact.Instructor__c.Id];
+        for (let contact of workshop.Instructors__r) {
+            let user = this.userMap[contact.Instructor__r.Id];
             if (user) await this.auth.grantPermissionToUserAsync(permission.resource, 2, user.Id);
         }
     }
@@ -64,7 +64,7 @@ export class WorkshopMapper {
             fields: [
                 'Id',
                 'Organizing_Affiliate__c',
-                '(SELECT Instructor__c.Id, Instructor__c.Email FROM Instructors__r)'
+                '(SELECT Instructor__r.Id, Instructor__r.Email FROM Instructors__r)'
             ],
             table: 'Workshop__c',
             clauses: undefined
